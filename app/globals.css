@@ -3,6 +3,8 @@
 
 @custom-variant dark (&:is(.dark *));
 
+
+
 :root {
   --color-blue: #94eaff;
   --color-light-100: #e7f2ff;
