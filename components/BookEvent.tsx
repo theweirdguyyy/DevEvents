@@ -8,6 +8,12 @@ const BookEvent = () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        
+        // TODO: Send email to booking API
+        // await fetch('/api/bookings', {
+        //   method: 'POST',
+        //   body: JSON.stringify({ email, eventId }),
+        // });
 
         setTimeout(() => {
             setSubmitted(true);
