@@ -69,8 +69,14 @@ export async function GET(
       }
 
       // Return generic error with error message
+      if (process.env.NODE_ENV === 'development') {
+        return NextResponse.json(
+          { message: 'Failed to fetch event', error: error.message },
+          { status: 500 }
+        );
+      }
       return NextResponse.json(
-        { message: 'Failed to fetch events', error: error.message },
+        { message: 'Failed to fetch event' },
         { status: 500 }
       );
     }
