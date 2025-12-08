@@ -1,11 +1,28 @@
 import EventCard from "@/components/EventCard"
 import ExploreBtn from "@/components/ExploreBtn"
-import { events } from "@/lib/constants"
+import { IEvent } from "@/database";
+import { cacheLife } from "next/cache";
 
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
+const page = async () => {
+  'use cache';
+  cacheLife('hours')
+  
+  let events = [];
+  try {
+    const response = await fetch(`${BASE_URL}/api/events`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch events');
+    }
+    const data = await response.json();
+    events = data.events || [];
+  } catch (error) {
+    console.error('Error fetching events:', error);
+    // Consider showing an error UI instead of an empty list
+  }
 
-const page = () => {
   return (
     <section>
       <h1 className="text-center">The Hub for Every Dev <br /> Event You Can't Miss</h1>
@@ -17,7 +34,7 @@ const page = () => {
         <h3>Featured Events</h3>
 
         <ul className="events list-none">
-          {events.map((event) => (
+          {events && events.length > 0 && events.map((event: IEvent) => (
             <li key={event.title}>
               <EventCard {...event} />  
             </li>

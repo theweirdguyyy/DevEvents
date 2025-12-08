@@ -1,7 +1,21 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  cacheComponents: true,
+  
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+      // 💡 Added configuration for Unsplash images 💡
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      }
+    ]
+  },
 
   async rewrites() {
     return [
