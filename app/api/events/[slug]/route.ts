@@ -12,7 +12,7 @@ type RouteParams = {
 
 /**
  * GET /api/events/[slug]
- * Fetches a single events by its slug
+ * Fetches a single event by its slug
  */
 export async function GET(
   req: NextRequest,
