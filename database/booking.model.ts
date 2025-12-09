@@ -1,3 +1,4 @@
+// booking.model.ts
 import { Schema, model, models, Document, Types } from 'mongoose';
 
 // TypeScript interface for Booking document
@@ -10,12 +11,14 @@ export interface IBooking extends Document {
 
 const bookingSchema = new Schema<IBooking>(
   {
+// ... (schema definition remains the same)
     eventId: {
       type: Schema.Types.ObjectId,
       ref: 'Event',
       required: [true, 'Event ID is required'],
     },
     email: {
+// ... (email validation remains the same)
       type: String,
       required: [true, 'Email is required'],
       trim: true,
@@ -40,9 +43,10 @@ bookingSchema.index({ eventId: 1 });
 /**
  * Pre-save hook to validate that the referenced event exists
  */
-bookingSchema.pre('save', async function (next) {
+// Removed 'next' parameter and fixed logic to THROW errors
+bookingSchema.pre('save', async function () { 
   // Only validate eventId if it's modified or document is new
-  if (this.isModified('eventId')) {
+  if (this.isModified('eventId') || this.isNew) {
     try {
       // Dynamically import Event model to avoid circular dependency
       const Event = models.Event || (await import('./event.model')).default;
@@ -50,14 +54,14 @@ bookingSchema.pre('save', async function (next) {
       const eventExists = await Event.findById(this.eventId);
       
       if (!eventExists) {
-        return next(new Error('Referenced event does not exist'));
+        // FIX: Throw the error instead of calling next(new Error(...))
+        throw new Error('Referenced event does not exist');
       }
     } catch (error) {
-      return next(new Error('Failed to validate event reference'));
+      // FIX: Throw the error instead of calling next(new Error(...))
+      throw new Error('Failed to validate event reference');
     }
   }
-
-  next();
 });
 
 // Use existing model if available (prevents OverwriteModelError in development)
