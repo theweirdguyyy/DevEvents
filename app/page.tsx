@@ -30,6 +30,7 @@ const Page = async () => {
                 </ul>
             </div>
         </section>
+        
     )
 }
 

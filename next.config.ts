@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'res.cloudinary.com',
       },
-      // 💡 Added configuration for Unsplash images 💡
+      
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
