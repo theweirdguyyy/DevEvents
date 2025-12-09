@@ -1,4 +1,3 @@
-// booking.action.ts
 'use server';
 
 import Booking from '@/database/booking.model';
@@ -9,8 +8,7 @@ export const createBooking = async ({ eventId, slug, email }: { eventId: string;
     try {
         await connectDB();
 
-        // FIX: Remove 'slug' from the data passed to Booking.create()
-        await Booking.create({ eventId, email });
+        await Booking.create({ eventId, slug, email });
 
         return { success: true };
     } catch (e) {

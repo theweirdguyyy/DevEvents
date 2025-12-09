@@ -1,7 +1,6 @@
 import React from 'react'
 import {notFound} from "next/navigation";
 import {IEvent} from "@/database";
-// Update the import path below if the file is not at src/lib/actions/event.actions.ts
 import {getSimilarEventsBySlug} from "@/lib/actions/event.action";
 import Image from "next/image";
 import BookEvent from "@/components/BookEvent";
