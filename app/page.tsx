@@ -3,12 +3,20 @@ import EventCard from "@/components/EventCard";
 import {IEvent} from "@/database";
 import {cacheLife} from "next/cache";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+// --- START: Updated BASE_URL definition ---
+// VERCEL_URL is injected by Vercel and usually does not include the protocol (https://).
+// We must prepend it to create a valid absolute URL for Node.js fetch.
+const VERCEL_URL = process.env.NEXT_PUBLIC_VERCEL_URL;
+const BASE_URL = VERCEL_URL 
+    ? `https://${VERCEL_URL}` // **FIX:** Explicitly add 'https://'
+    : 'http://localhost:3000'; // Fallback for local development
+// --- END: Updated BASE_URL definition ---
 
 const Page = async () => {
     'use cache';
     cacheLife('hours')
-    const response = await fetch(`${BASE_URL}/api/events`);
+    // This will now correctly resolve to "https://dev-events-neon.vercel.app/api/events"
+    const response = await fetch(`${BASE_URL}/api/events`); 
     const { events } = await response.json();
 
     return (
@@ -30,6 +38,7 @@ const Page = async () => {
                 </ul>
             </div>
         </section>
+        
     )
 }
 
