@@ -9,10 +9,17 @@ import { cacheLife } from "next/cache";
 import connectDB from "@/lib/mongodb";
 import Event from "@/database/event.model";
 
+// FIX: Added 'flex flex-row items-center' to ensure the icon and text are always on the same line
 const EventDetailItem = ({ icon, alt, label }: { icon: string; alt: string; label: string; }) => (
-    <div className="flex-row-gap-2 items-center text-white">
-        <Image src={icon} alt={alt} width={17} height={17} />
-        <p className="text-sm md:text-base">{label}</p>
+    <div className="flex flex-row items-center gap-2 text-white">
+        <Image 
+            src={icon} 
+            alt={alt} 
+            width={17} 
+            height={17} 
+            className="shrink-0" // Prevents the icon from being squeezed
+        />
+        <p className="text-sm md:text-base leading-none">{label}</p>
     </div>
 )
 
@@ -38,7 +45,6 @@ const EventTags = ({ tags }: { tags: string[] }) => (
 )
 
 const EventDetails = async ({ params }: { params: Promise<string> }) => {
-    // Next.js 16/15 caching directive
     'use cache'
     cacheLife('hours');
     
@@ -48,20 +54,16 @@ const EventDetails = async ({ params }: { params: Promise<string> }) => {
     let similarEvents: IEvent[] = [];
 
     try {
-        // FIX: Directly connect to DB. This bypasses the need for BASE_URL and internal fetch.
         await connectDB();
         
-        // Find the event by slug
         const foundEvent = await Event.findOne({ slug: slug }).lean();
         
         if (!foundEvent) {
             return notFound();
         }
 
-        // Cast to our interface
         event = foundEvent as unknown as IEvent;
 
-        // Use your existing server action for similar events
         const rawSimilar = await getSimilarEventsBySlug(slug);
         similarEvents = rawSimilar as unknown as IEvent[];
         
@@ -88,7 +90,8 @@ const EventDetails = async ({ params }: { params: Promise<string> }) => {
                     <div className="space-y-6">
                         <h1 className="text-3xl md:text-5xl font-bold text-white leading-tight">{title}</h1>
                         
-                        <div className="flex flex-wrap gap-5 py-4 border-y border-gray-800">
+                        {/* THE SECTION YOU MENTIONED */}
+                        <div className="flex flex-wrap gap-x-8 gap-y-4 py-4 border-y border-gray-800">
                             <EventDetailItem icon="/icons/pin.svg" alt="location" label={location} />
                             <EventDetailItem icon="/icons/calendar.svg" alt="date" label={date} />
                             <EventDetailItem icon="/icons/clock.svg" alt="time" label={time} />
