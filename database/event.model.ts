@@ -17,6 +17,7 @@ export interface IEvent extends Document {
   agenda: string[];
   organizer: string;
   tags: string[];
+  bookings: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -104,6 +105,7 @@ const EventSchema = new Schema<IEvent>(
         message: 'At least one tag is required',
       },
     },
+    bookings: { type: Number, default: 0 },
   },
   {
     timestamps: true, // Auto-generate createdAt and updatedAt
